@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 import numpy as np
 from random import shuffle
 
@@ -29,7 +30,24 @@ def softmax_loss_naive(W, X, y, reg):
   # here, it is easy to run into numeric instability. Don't forget the        #
   # regularization!                                                           #
   #############################################################################
-  pass
+  num_classes = W.shape[1]
+  num_train = X.shape[0]
+  loss = 0.0
+  for i in range(num_train):
+      scores = X[i].dot(W)  # 得到其中一行的预测结果
+      correct_class_score = scores[y[i]]
+      exp_sum = np.sum(np.exp(scores))
+      loss += np.log(exp_sum) - correct_class_score
+
+      dW[:, y[i]] -=  X[i]
+      for j in range(num_classes):
+          dW[:, j] += (np.exp(scores[j]) / exp_sum) * X[i]
+
+  loss /= num_train
+  dW /= num_train
+  # Add regularization to the loss.
+  loss += 0.5 * reg * np.sum(W * W)
+  dW += reg * W
   #############################################################################
   #                          END OF YOUR CODE                                 #
   #############################################################################
@@ -45,7 +63,7 @@ def softmax_loss_vectorized(W, X, y, reg):
   """
   # Initialize the loss and gradient to zero.
   loss = 0.0
-  dW = np.zeros_like(W)
+  # dW = np.zeros_like(W)
 
   #############################################################################
   # TODO: Compute the softmax loss and its gradient using no explicit loops.  #
@@ -53,7 +71,21 @@ def softmax_loss_vectorized(W, X, y, reg):
   # here, it is easy to run into numeric instability. Don't forget the        #
   # regularization!                                                           #
   #############################################################################
-  pass
+  num_train = X.shape[0]
+  scores = X.dot(W)
+  correct_class_score = scores[np.arange(num_train), y].reshape(num_train, 1)
+  exp_sum = np.sum(np.exp(scores), axis=1).reshape(num_train, 1)
+  loss += np.sum(np.log(exp_sum) - correct_class_score)
+
+  margin = np.exp(scores) / exp_sum
+  margin[np.arange(num_train), y] += -1
+  dW = X.T.dot(margin)
+
+  loss /= num_train
+  dW /= num_train
+  # Add regularization to the loss.
+  loss += 0.5 * reg * np.sum(W * W)
+  dW += reg * W
   #############################################################################
   #                          END OF YOUR CODE                                 #
   #############################################################################

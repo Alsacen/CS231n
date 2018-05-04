@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 import numpy as np
 from random import randrange
 
@@ -106,10 +107,19 @@ def grad_check_sparse(f, x, analytic_grad, num_checks=10, h=1e-5):
   sample a few random elements and only return numerical
   in this dimensions.
   """
+  # f是svm_loss_naive函数接口，f(x)返回当前x做W矩阵时的loss
+  # x是当前W矩阵
+  # analytic_grad是带验证的dW也即d(L)
+  # 三个参数的尺寸一致
+  # ix是随机选择一个点(a,b)，a表示第a个图片，b表示第b个维度
+  # oldval是x(a,b)的值也即W(a,b)的值
+  # x[ix] = oldval + h赋予这个值一个增量
+  # fxph = f(x)是f(x + h)返回的总平均loss
+  # grad_numerical按导数定义计算图片a在b维度的偏导数
+  # grad_analytic为原始dW的在这一点的
 
   for i in xrange(num_checks):
-    ix = tuple([randrange(m) for m in x.shape])
-
+    ix = tuple([randrange(m)for m in x.shape])
     oldval = x[ix]
     x[ix] = oldval + h # increment by h
     fxph = f(x) # evaluate f(x + h)

@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 import cPickle as pickle
 import numpy as np
 import os
@@ -6,6 +7,7 @@ from scipy.misc import imread
 def load_CIFAR_batch(filename):
   """ load single batch of cifar """
   with open(filename, 'rb') as f:
+    # 载入pickle,原数据为dict类型，所以datadict为dict类型
     datadict = pickle.load(f)
     X = datadict['data']
     Y = datadict['labels']
