@@ -6,8 +6,10 @@ from assignment1.cs231n.classifiers.softmax import *
 class LinearClassifier(object):
 
   def __init__(self):
+    # 设置W为类属性，方便在train中训练好后，在predict中调用
     self.W = None
 
+    #  训练slef.W并返回loss_history用于画图
   def train(self, X, y, learning_rate=1e-3, reg=1e-5, num_iters=100,
             batch_size=200, verbose=False):
     """
@@ -94,6 +96,7 @@ class LinearClassifier(object):
     # TODO:                                                                   #
     # Implement this method. Store the predicted labels in y_pred.            #
     ###########################################################################
+    # 返回数组
     y_pred = np.argmax(X.dot(self.W), axis=1)
     ###########################################################################
     #                           END OF YOUR CODE                              #
